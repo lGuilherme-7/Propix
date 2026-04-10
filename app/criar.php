@@ -678,7 +678,10 @@ $v = [
                 <label class="campo-obrigatorio" for="valor">Valor total</label>
                 <div class="input-prefix-wrap">
                   <span class="input-prefix">R$</span>
-                  <input type="number" id="valor" name="valor" placeholder="0,00" value="<?= $v['valor'] ?>" required min="0" step="0.01" oninput="atualizarPreview()">
+                  <!-- Campo visível com máscara -->
+                  <input type="text" id="valor_display" placeholder="0,00" value="<?= $v['valor'] ? number_format((float)$v['valor'], 2, ',', '.') : '' ?>" autocomplete="off" inputmode="numeric" oninput="mascaraValor(this)">
+                  <!-- Campo real enviado ao backend (sempre em formato numérico) -->
+                  <input type="hidden" id="valor" name="valor" value="<?= $v['valor'] ?>">
                 </div>
               </div>
               <div class="campo">
@@ -784,7 +787,7 @@ $v = [
   // ── Preview em tempo real ──
   const inpServico = document.getElementById('servico');
   const inpCliente = document.getElementById('cliente');
-  const inpValor   = document.getElementById('valor');
+  const inpValor   = document.getElementById('valor');        // hidden — valor numérico
   const inpPrazo   = document.getElementById('prazo');
 
   // Sincroniza campo cliente com preview
@@ -836,7 +839,27 @@ $v = [
   const textarea = document.getElementById('descricao');
   if (textarea.value) contarChars(textarea);
 
-  // ── Máscara de telefone ──
+  // ── Máscara de valor (R$ 1.000,00) ──
+  function mascaraValor(el) {
+    let v = el.value.replace(/\D/g, '');          // só dígitos
+    v = (parseInt(v) || 0).toString();            // remove zeros à esquerda
+    v = v.padStart(3, '0');                       // mínimo 3 dígitos
+    const cents   = v.slice(-2);
+    const inteiro = v.slice(0, -2).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    el.value = inteiro + ',' + cents;             // ex: 1.000,00
+
+    // Sincroniza campo hidden (backend recebe em ponto flutuante)
+    const numerico = inteiro.replace(/\./g, '') + '.' + cents;
+    document.getElementById('valor').value = numerico;
+
+    atualizarPreview();
+  }
+
+  // Dispara máscara nos campos repopulados
+  const displayValor = document.getElementById('valor_display');
+  if (displayValor.value) mascaraValor(displayValor);
+
+
   document.getElementById('telefone').addEventListener('input', function() {
     let v = this.value.replace(/\D/g, '').slice(0, 11);
     if (v.length > 2)  v = '(' + v.slice(0,2) + ') ' + v.slice(2);

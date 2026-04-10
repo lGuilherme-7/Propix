@@ -1,24 +1,38 @@
 <?php
 session_start();
+require_once '../config/config.php';
 
-// Simulação de dados — será substituído pela query real do banco
-$orcamento = [
-    'cliente'     => $cliente     ?? '',
-    'email'       => $email       ?? '',
-    'telefone'    => $telefone    ?? '',
-    'servico'     => $servico     ?? '',
-    'valor'       => $valor       ?? '',
-    'descricao'   => $descricao   ?? '',
-    'prazo'       => $prazo       ?? '',
-    'status'      => $status      ?? 'pendente',
-    'hash'        => $hash        ?? '',
-    'data_criacao'=> $data_criacao ?? '',
-];
+$token = trim($_GET['token'] ?? '');
+$msg   = $_GET['msg']  ?? '';
+$erro  = $_GET['erro'] ?? '';
 
-$status      = $orcamento['status'];
-$hash        = $orcamento['hash'];
-$msg         = $_GET['msg']  ?? '';
-$erro        = $_GET['erro'] ?? '';
+// Token obrigatório
+if (empty($token)) {
+    http_response_code(404);
+    die('Proposta não encontrada.');
+}
+
+$pdo  = conectar();
+$stmt = $pdo->prepare(
+    'SELECT cliente, email, telefone, servico, valor, descricao, prazo,
+            status, hash,
+            DATE_FORMAT(data_criacao, "%d/%m/%Y") AS data_criacao
+     FROM orcamentos
+     WHERE hash = ?
+     LIMIT 1'
+);
+$stmt->execute([$token]);
+$orcamento = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Não encontrou
+if (!$orcamento) {
+    http_response_code(404);
+    die('Proposta não encontrada ou link inválido.');
+}
+
+$status  = $orcamento['status'];
+$hash    = $orcamento['hash'];
+$pendente = $status === 'pendente';
 
 $status_label = match($status) {
     'aprovado' => 'Aprovado',
@@ -31,8 +45,6 @@ $status_cor = match($status) {
     'recusado' => 'recusado',
     default    => 'pendente',
 };
-
-$pendente = $status === 'pendente';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

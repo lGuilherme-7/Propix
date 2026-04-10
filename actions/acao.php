@@ -233,12 +233,13 @@ function acao_criar_orcamento(): void
 
     $stmt = $pdo->prepare(
         'INSERT INTO orcamentos
-            (hash, cliente, email, telefone, servico, valor, descricao, prazo, status)
+            (usuario_id, hash, cliente, email, telefone, servico, valor, descricao, prazo, status)
          VALUES
-            (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
 
     $stmt->execute([
+        $_SESSION['usuario_id'],
         $hash,
         limpar($dados['cliente']),
         $dados['email'],
@@ -322,17 +323,17 @@ function acao_excluir_orcamento(): void
 
     $pdo = conectar();
 
-    // Verifica se existe
-    $stmt = $pdo->prepare('SELECT id FROM orcamentos WHERE hash = ? LIMIT 1');
-    $stmt->execute([$hash]);
+    // Verifica se existe e pertence ao usuário logado
+    $stmt = $pdo->prepare('SELECT id FROM orcamentos WHERE hash = ? AND usuario_id = ? LIMIT 1');
+    $stmt->execute([$hash, $_SESSION['usuario_id']]);
 
     if (!$stmt->fetch()) {
         redirecionar('../app/orcamentos.php', ['erro' => 'Orçamento não encontrado.']);
     }
 
     // Exclui
-    $stmt = $pdo->prepare('DELETE FROM orcamentos WHERE hash = ?');
-    $stmt->execute([$hash]);
+    $stmt = $pdo->prepare('DELETE FROM orcamentos WHERE hash = ? AND usuario_id = ?');
+    $stmt->execute([$hash, $_SESSION['usuario_id']]);
 
     redirecionar('../app/orcamentos.php', ['msg' => 'Orçamento excluído com sucesso.']);
 }

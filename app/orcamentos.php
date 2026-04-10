@@ -4,27 +4,48 @@ require_once '../config/auth.php';
 require_once '../config/config.php';
 
 $nome_usuario = $_SESSION['nome'] ?? '';
-
-$msg  = $_GET['msg']  ?? '';
-$erro = $_GET['erro'] ?? '';
-
-// Filtro ativo vindo da URL (será usado na query real)
+$msg    = $_GET['msg']    ?? '';
+$erro   = $_GET['erro']   ?? '';
 $filtro = $_GET['filtro'] ?? 'todos';
-$busca  = $_GET['busca']  ?? '';
+$busca  = trim($_GET['busca'] ?? '');
+$uid    = $_SESSION['usuario_id'];
 
-// Dados virão do banco — variáveis preparadas
-$orcamentos = $orcamentos ?? [];
-$total      = $total      ?? 0;
-$aprovados  = $aprovados  ?? 0;
-$pendentes  = $pendentes  ?? 0;
-$recusados  = $recusados  ?? 0;
+$pdo = conectar();
 
-// Filtra localmente até o backend estar pronto
-$lista = array_filter($orcamentos, function($o) use ($filtro, $busca) {
-    $passaFiltro = $filtro === 'todos' || $o['status'] === $filtro;
-    $passaBusca  = !$busca || stripos($o['cliente'], $busca) !== false || stripos($o['servico'], $busca) !== false;
-    return $passaFiltro && $passaBusca;
-});
+// Contadores — apenas do usuário logado
+$stmt  = $pdo->prepare('SELECT COUNT(*) FROM orcamentos WHERE usuario_id = ?');
+$stmt->execute([$uid]);
+$total = (int) $stmt->fetchColumn();
+
+$stmt = $pdo->prepare('SELECT COUNT(*) FROM orcamentos WHERE usuario_id = ? AND status = ?');
+$stmt->execute([$uid, 'aprovado']); $aprovados = (int) $stmt->fetchColumn();
+$stmt->execute([$uid, 'pendente']); $pendentes = (int) $stmt->fetchColumn();
+$stmt->execute([$uid, 'recusado']); $recusados = (int) $stmt->fetchColumn();
+
+// Query principal — sempre filtra por usuario_id
+$where  = ['usuario_id = ?'];
+$params = [$uid];
+
+if ($filtro !== 'todos') {
+    $where[]  = 'status = ?';
+    $params[] = $filtro;
+}
+
+if ($busca !== '') {
+    $where[]  = '(cliente LIKE ? OR servico LIKE ?)';
+    $params[] = '%' . $busca . '%';
+    $params[] = '%' . $busca . '%';
+}
+
+$sql = 'SELECT cliente, email, servico, valor, status, hash,
+               DATE_FORMAT(data_criacao, "%d/%m/%Y") AS data_criacao
+        FROM orcamentos
+        WHERE ' . implode(' AND ', $where) . '
+        ORDER BY data_criacao DESC';
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$lista = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

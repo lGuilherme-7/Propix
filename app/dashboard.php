@@ -3,17 +3,31 @@ session_start();
 require_once '../config/auth.php';
 require_once '../config/config.php';
 
-// Dados reais virão do banco — variáveis preparadas para o backend
 $nome_usuario = $_SESSION['nome'] ?? '';
+$uid = $_SESSION['usuario_id'];
 
-// Contadores (serão substituídos por queries reais)
-$total     = $total     ?? 0;
-$aprovados = $aprovados ?? 0;
-$pendentes = $pendentes ?? 0;
-$recusados = $recusados ?? 0;
+$pdo = conectar();
 
-// Lista recente (será substituída por query real)
-$recentes = $recentes ?? [];
+// Contadores — apenas do usuário logado
+$stmt  = $pdo->prepare('SELECT COUNT(*) FROM orcamentos WHERE usuario_id = ?');
+$stmt->execute([$uid]);
+$total = (int) $stmt->fetchColumn();
+
+$stmt = $pdo->prepare('SELECT COUNT(*) FROM orcamentos WHERE usuario_id = ? AND status = ?');
+$stmt->execute([$uid, 'aprovado']); $aprovados = (int) $stmt->fetchColumn();
+$stmt->execute([$uid, 'pendente']); $pendentes = (int) $stmt->fetchColumn();
+$stmt->execute([$uid, 'recusado']); $recusados = (int) $stmt->fetchColumn();
+
+// Últimos 8 orçamentos do usuário logado
+$stmt = $pdo->prepare(
+    'SELECT cliente, email, servico, valor, status, hash
+     FROM orcamentos
+     WHERE usuario_id = ?
+     ORDER BY data_criacao DESC
+     LIMIT 8'
+);
+$stmt->execute([$uid]);
+$recentes = $stmt->fetchAll();
 
 $taxa = $total > 0 ? round(($aprovados / $total) * 100) : 0;
 ?>
