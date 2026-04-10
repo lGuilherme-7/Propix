@@ -3,10 +3,10 @@
 // ──────────────────────────────────────────────
 // CONFIGURAÇÕES DO BANCO DE DADOS
 // ──────────────────────────────────────────────
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'propix');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_HOST', 'sql113.infinityfree.com');
+define('DB_NAME', 'if0_41632013_propix');
+define('DB_USER', 'if0_41632013');
+define('DB_PASS', 'RgZ4zvfAeHBTCq');
 define('DB_CHARSET', 'utf8mb4');
 
 // ──────────────────────────────────────────────
