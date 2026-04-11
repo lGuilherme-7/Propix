@@ -872,7 +872,7 @@ $lista = $stmt->fetchAll();
 
   // ── Copiar link ──
   function copiarLink(hash) {
-    const url = `${location.origin}/propix/public/visualizar.php?token=${hash}`;
+    const url = `https://propix.xo.je/public/visualizar.php?token=${hash}`;
     navigator.clipboard.writeText(url).then(() => {
       const toast = document.getElementById('toast');
       toast.classList.add('visivel');
