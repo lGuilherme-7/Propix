@@ -329,15 +329,18 @@ $status_cor = match($status) {
     }
 
     /* Descrição */
-    .descricao-box {
-      background: var(--fundo);
-      border: 1px solid var(--borda);
-      border-radius: 10px;
-      padding: 1rem 1.1rem;
-      font-size: .87rem;
-      color: var(--texto);
-      line-height: 1.65;
-    }
+  .descricao-box {
+    background: var(--fundo);
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+    font-size: .87rem;
+    color: var(--texto);
+    line-height: 1.65;
+    word-break: break-word;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
 
     /* Prazo */
     .prazo-box {
