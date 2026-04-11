@@ -252,14 +252,8 @@ function acao_criar_orcamento(): void
     ]);
 
     // Redireciona para listagem com mensagem de sucesso e link gerado
-    $link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http')
-          . '://' . $_SERVER['HTTP_HOST']
-          . dirname($_SERVER['SCRIPT_NAME'], 2)
-          . '/public/visualizar.php?token=' . $hash;
-
-    redirecionar('../app/orcamentos.php', [
-        'msg'  => 'Orçamento criado! Link: ' . $link,
-    ]);
+    $link = APP_URL . '/public/visualizar.php?token=' . $hash;
+    
 }
 
 // ══════════════════════════════════════════════

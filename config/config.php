@@ -13,7 +13,7 @@ define('DB_CHARSET', 'utf8mb4');
 // CONFIGURAÇÕES DA APLICAÇÃO
 // ──────────────────────────────────────────────
 define('APP_NOME', 'Propix');
-define('APP_URL',  'http://localhost/propix'); // Sem barra no final
+define('APP_URL', 'https://propix.xo.je'); // sem barra no final, sem /propix
 
 // ──────────────────────────────────────────────
 // AMBIENTE (development | production)
