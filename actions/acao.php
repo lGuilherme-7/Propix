@@ -251,9 +251,11 @@ function acao_criar_orcamento(): void
         'pendente',
     ]);
 
-    // Redireciona para listagem com mensagem de sucesso e link gerado
     $link = APP_URL . '/public/visualizar.php?token=' . $hash;
-    
+
+    redirecionar('../app/orcamentos.php', [
+        'msg' => 'Orçamento criado! Link: ' . $link,
+    ]);
 }
 
 // ══════════════════════════════════════════════
