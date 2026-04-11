@@ -820,7 +820,7 @@ $status_cor = match($status) {
     <p>Ao confirmar, o responsável será notificado e a proposta ficará marcada como aprovada.</p>
     <div class="modal-btns">
       <button class="btn-cancelar" id="cancelarAprovar">Cancelar</button>
-      <form action="../actions/acao.php" method="POST" style="display:contents">
+      <form action="/actions/acao.php" method="POST" style="display:contents">
         <input type="hidden" name="acao"   value="aprovar">
         <input type="hidden" name="hash"   value="<?= htmlspecialchars($hash) ?>">
         <button type="submit" class="btn-confirmar verde">Aprovar</button>
@@ -839,7 +839,7 @@ $status_cor = match($status) {
     <p>Tem certeza? O responsável será informado que a proposta foi recusada.</p>
     <div class="modal-btns">
       <button class="btn-cancelar" id="cancelarRecusar">Cancelar</button>
-      <form action="../actions/acao.php" method="POST" style="display:contents">
+      <form action="/actions/acao.php" method="POST" style="display:contents">
         <input type="hidden" name="acao"  value="recusar">
         <input type="hidden" name="hash"  value="<?= htmlspecialchars($hash) ?>">
         <button type="submit" class="btn-confirmar vermelho">Recusar</button>

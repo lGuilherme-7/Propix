@@ -823,7 +823,7 @@ $lista = $stmt->fetchAll();
     <p id="modalExcluirTxt">Essa ação não pode ser desfeita.</p>
     <div class="modal-btns">
       <button class="btn-cancelar" id="cancelarExcluir">Cancelar</button>
-      <form id="formExcluir" action="../actions/acao.php" method="POST" style="display:contents">
+      <form id="formExcluir" action="/actions/acao.php" method="POST" style="display:contents">
         <input type="hidden" name="acao" value="excluir_orcamento">
         <input type="hidden" name="hash" id="hashExcluir" value="">
         <button type="submit" class="btn-excluir-conf">Excluir</button>

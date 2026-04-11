@@ -620,7 +620,7 @@ $v = [
     </div>
   <?php endif; ?>
 
-  <form action="../actions/acao.php" method="POST" id="formCriar">
+  <form action="https://propix.xo.je/actions/acao.php" method="POST" id="formCriar">
     <input type="hidden" name="acao" value="criar_orcamento">
 
     <div class="form-layout">

@@ -1,0 +1,11 @@
+Options -Indexes
+
+RewriteEngine On
+
+# Força HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Permite POST sem bloqueio
+RewriteCond %{REQUEST_METHOD} POST
+RewriteRule .* - [L]

@@ -272,7 +272,7 @@ $msg  = $_GET['msg']  ?? '';
     </div>
   <?php endif; ?>
 
-  <form action="../actions/acao.php" method="POST">
+  <form action="/actions/acao.php" method="POST">
     <input type="hidden" name="acao" value="login">
 
     <div class="campo">

@@ -10,6 +10,6 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 if (empty($_SESSION['usuario_id'])) {
-    header('Location: ../public/index.php?erro=' . urlencode('Faça login para continuar.'));
+    header('Location: /public/index.php?erro=' . urlencode('Faça login para continuar.'));
     exit;
 }

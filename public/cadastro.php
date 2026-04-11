@@ -305,7 +305,7 @@ $email = htmlspecialchars($_GET['email'] ?? '');
     </div>
   <?php endif; ?>
 
-  <form action="../actions/acao.php" method="POST" id="form">
+  <form action="/actions/acao.php" method="POST">
     <input type="hidden" name="acao" value="cadastro">
 
     <div class="campo">
