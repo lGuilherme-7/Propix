@@ -10,6 +10,15 @@ O **Propix** é um sistema web completo de gestão de orçamentos com mini CRM i
 
 ---
 
+
+## 🌐 Link para acessar
+
+```
+https://propix.xo.je/
+```
+
+---
+
 ## ✨ Funcionalidades
 
 - Cadastro e login com autenticação segura
